@@ -15,15 +15,12 @@ No npm, pip, Docker, or external services are required. The app uses only Python
 
 For deployment notes, see `DEPLOYMENT.md`.
 
-## Deliverable links
+## Links
 
-- Screen recording: TODO
 - GitHub repo: https://github.com/shivanand-jha/cars
 - Live demo: https://shivanand-jha.github.io/cars/
 
 Note: the live demo is GitHub Pages static hosting, so it runs recommendation logic in the browser and stores demo shortlists in `localStorage`. The assignment's full-stack version is this repo's Python/SQLite app and should be evaluated with the local run instructions above.
-
-For final packaging, follow `SUBMISSION_GUIDE.md`.
 
 ## What I built and why
 

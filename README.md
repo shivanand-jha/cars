@@ -17,11 +17,7 @@ For deployment notes, see `DEPLOYMENT.md`.
 
 ## Deliverable links
 
-- Screen recording: TODO
 - GitHub repo: TODO
-- Live URL: TODO, or use the local run instructions above
-
-For final packaging, follow `SUBMISSION_GUIDE.md`.
 
 ## What I built and why
 

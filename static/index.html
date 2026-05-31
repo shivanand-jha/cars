@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CarDekho Shortlist Coach</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="planner">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">CarDekho Group AI Assignment</p>
+            <h1>Shortlist Coach</h1>
+          </div>
+          <div class="status">
+            <span id="carCount">Loading cars</span>
+            <span id="savedCount">0 saved</span>
+          </div>
+        </header>
+
+        <section class="workspace">
+          <form id="prefsForm" class="panel controls">
+            <div class="section-title">
+              <h2>Buyer priorities</h2>
+              <p>Tune the recommendation engine and see the shortlist update.</p>
+            </div>
+
+            <label>
+              Buyer name
+              <input id="buyerName" name="buyer_name" value="Shivanand" maxlength="80">
+            </label>
+
+            <label>
+              Budget
+              <output id="budgetValue">12 lakh</output>
+              <input id="budget" name="budget_lakh" type="range" min="7" max="18" step="0.5" value="12">
+            </label>
+
+            <label>
+              Family size
+              <select id="familySize" name="family_size">
+                <option value="2">1-2 people</option>
+                <option value="4" selected>3-4 people</option>
+                <option value="5">5 people</option>
+                <option value="6">6+ people</option>
+              </select>
+            </label>
+
+            <label>
+              Main usage
+              <select id="usage" name="usage">
+                <option value="city">Mostly city</option>
+                <option value="highway">Frequent highway</option>
+                <option value="mixed" selected>Mixed use</option>
+              </select>
+            </label>
+
+            <label>
+              Body style
+              <select id="bodyPreference" name="body_preference">
+                <option value="any" selected>Open to all</option>
+                <option value="Hatchback">Hatchback</option>
+                <option value="Compact SUV">Compact SUV</option>
+                <option value="SUV">SUV</option>
+                <option value="Sedan">Sedan</option>
+                <option value="MPV">MPV</option>
+                <option value="Micro SUV">Micro SUV</option>
+              </select>
+            </label>
+
+            <label>
+              Mileage priority
+              <output id="mileageValue">3</output>
+              <input id="mileage" name="mileage_priority" type="range" min="1" max="5" step="1" value="3">
+            </label>
+
+            <label>
+              Safety priority
+              <output id="safetyValue">4</output>
+              <input id="safety" name="safety_priority" type="range" min="1" max="5" step="1" value="4">
+            </label>
+
+            <label>
+              Feature priority
+              <output id="featureValue">3</output>
+              <input id="features" name="feature_priority" type="range" min="1" max="5" step="1" value="3">
+            </label>
+
+            <button type="submit">Rank cars</button>
+          </form>
+
+          <section class="results">
+            <div class="toolbar">
+              <div>
+                <h2>Ranked recommendations</h2>
+                <p id="summary">Answer the buyer questions to get a confidence-ranked shortlist.</p>
+              </div>
+              <button id="saveBtn" class="secondary" type="button">Save shortlist</button>
+            </div>
+            <div id="recommendations" class="cards"></div>
+          </section>
+        </section>
+
+        <section class="compare-grid">
+          <div class="panel">
+            <div class="section-title">
+              <h2>Compare selected cars</h2>
+              <p>Pick up to three recommendations to compare tradeoffs.</p>
+            </div>
+            <div id="compareTable" class="compare-empty">No cars selected yet.</div>
+          </div>
+
+          <div class="panel">
+            <div class="section-title">
+              <h2>Decision notes</h2>
+              <p>Capture the buyer's reasoning before saving.</p>
+            </div>
+            <textarea id="notes" rows="8">Shortlist rationale: keep two practical choices and one aspirational option.</textarea>
+            <div id="saveMessage" class="message"></div>
+          </div>
+        </section>
+
+        <section class="panel saved">
+          <div class="section-title">
+            <h2>Saved shortlist sessions</h2>
+            <p>Persisted locally in SQLite through the backend.</p>
+          </div>
+          <div id="savedList" class="saved-list"></div>
+        </section>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

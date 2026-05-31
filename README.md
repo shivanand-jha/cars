@@ -19,6 +19,8 @@ No npm, pip, Docker, or external services are required. The app uses only Python
 - GitHub repo: TODO
 - Live URL: TODO, or use the local run instructions above
 
+For final packaging, follow `SUBMISSION_GUIDE.md`.
+
 ## What I built and why
 
 I built a Shortlist Coach: a guided web app that asks for buyer priorities, ranks cars with visible reasoning, lets the buyer compare up to three cars, and saves shortlist sessions with notes.

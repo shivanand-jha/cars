@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CarDekho Shortlist Coach Demo</title>
+    <style>
+      :root { --ink:#172026; --muted:#61707c; --line:#d8e0e5; --page:#eef3f2; --green:#0f766e; --dark:#17324d; --amber:#b45309; }
+      * { box-sizing:border-box; }
+      body { margin:0; background:var(--page); color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+      main { width:min(1220px,100%); margin:auto; padding:24px; display:grid; gap:18px; }
+      header, .toolbar { display:flex; justify-content:space-between; align-items:end; gap:16px; }
+      h1,h2,p { margin-top:0; } h1 { font-size:clamp(2rem,4vw,4rem); line-height:.95; margin-bottom:0; } h2 { font-size:1rem; margin-bottom:4px; }
+      p { color:var(--muted); line-height:1.5; } .eyebrow { color:var(--green); font-size:.76rem; font-weight:800; text-transform:uppercase; margin-bottom:4px; }
+      .notice,.panel,.results { background:#fff; border:1px solid var(--line); border-radius:8px; box-shadow:0 14px 32px rgba(23,32,38,.08); padding:18px; }
+      .notice { background:#fff7ed; border-color:#fed7aa; color:#7c2d12; box-shadow:none; }
+      .workspace,.lower { display:grid; grid-template-columns:320px minmax(0,1fr); gap:18px; align-items:start; }
+      form { display:grid; gap:14px; position:sticky; top:16px; }
+      label { display:grid; gap:7px; color:#2d3c45; font-size:.82rem; font-weight:800; }
+      input,select,textarea,button { font:inherit; } input,select,textarea { width:100%; border:1px solid var(--line); border-radius:6px; padding:.72rem; }
+      input[type=range] { padding:0; accent-color:var(--green); } output { color:var(--green); font-weight:900; }
+      button { border:0; border-radius:6px; background:var(--green); color:white; cursor:pointer; font-weight:800; padding:.8rem 1rem; } button.secondary { background:var(--dark); }
+      .cards,.saved-list { display:grid; gap:12px; }
+      .car { border:1px solid var(--line); border-radius:8px; display:grid; grid-template-columns:minmax(0,1fr) 140px; gap:14px; padding:16px; }
+      .car.selected { border-color:var(--green); box-shadow:inset 4px 0 0 var(--green); }
+      .title { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px; } .title h3 { margin:0; font-size:1.1rem; }
+      .tag,.score { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:.38rem .62rem; color:var(--muted); font-size:.78rem; font-weight:800; background:#fff; }
+      .score { background:#e9f7f4; border-color:#b8dfd7; color:#0b4f4a; }
+      .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:12px 0; }
+      .metric { background:#f6f8f8; border-radius:6px; padding:.65rem; } .metric strong { display:block; font-size:.92rem; } .metric span { color:var(--muted); font-size:.74rem; font-weight:800; }
+      ul { margin:8px 0 0; padding-left:1.1rem; } li { margin:.32rem 0; } .cautions { color:var(--amber); }
+      .actions { display:grid; align-content:start; gap:8px; } .actions button.active { background:var(--amber); }
+      table { border-collapse:collapse; width:100%; margin-top:14px; } th,td { border-bottom:1px solid var(--line); padding:.72rem; text-align:left; vertical-align:top; } th { color:var(--muted); font-size:.78rem; text-transform:uppercase; }
+      .saved-item { border:1px solid var(--line); border-radius:8px; padding:12px; } .message { color:var(--muted); margin-top:12px; font-weight:800; }
+      @media (max-width:900px) { .workspace,.lower { grid-template-columns:1fr; } form { position:static; } .car { grid-template-columns:1fr; } }
+      @media (max-width:620px) { main { padding:14px; } header,.toolbar { align-items:stretch; flex-direction:column; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">CarDekho Group AI Assignment</p>
+          <h1>Shortlist Coach</h1>
+        </div>
+        <span class="tag" id="savedCount">0 saved</span>
+      </header>
+      <div class="notice">GitHub Pages demo: recommendations run in the browser and saved shortlists use localStorage. The submitted full-stack version in the repo uses Python APIs plus SQLite persistence.</div>
+      <section class="workspace">
+        <form class="panel" id="prefsForm">
+          <div><h2>Buyer priorities</h2><p>Tune the coach and rank a focused shortlist.</p></div>
+          <label>Buyer name <input id="buyerName" value="Shivanand" maxlength="80"></label>
+          <label>Budget <output id="budgetValue">12 lakh</output><input id="budget" type="range" min="7" max="18" step="0.5" value="12"></label>
+          <label>Family size <select id="familySize"><option value="2">1-2 people</option><option value="4" selected>3-4 people</option><option value="5">5 people</option><option value="6">6+ people</option></select></label>
+          <label>Main usage <select id="usage"><option value="city">Mostly city</option><option value="highway">Frequent highway</option><option value="mixed" selected>Mixed use</option></select></label>
+          <label>Body style <select id="bodyPreference"><option value="any" selected>Open to all</option><option>Hatchback</option><option>Compact SUV</option><option>SUV</option><option>Sedan</option><option>MPV</option><option>Micro SUV</option></select></label>
+          <label>Mileage priority <output id="mileageValue">3</output><input id="mileage" type="range" min="1" max="5" value="3"></label>
+          <label>Safety priority <output id="safetyValue">4</output><input id="safety" type="range" min="1" max="5" value="4"></label>
+          <label>Feature priority <output id="featureValue">3</output><input id="features" type="range" min="1" max="5" value="3"></label>
+          <button>Rank cars</button>
+        </form>
+        <section class="results">
+          <div class="toolbar"><div><h2>Ranked recommendations</h2><p id="summary">Answer the buyer questions to get a confidence-ranked shortlist.</p></div><button class="secondary" type="button" id="saveBtn">Save shortlist</button></div>
+          <div id="recommendations" class="cards"></div>
+        </section>
+      </section>
+      <section class="lower">
+        <section class="panel"><h2>Compare selected cars</h2><p>Pick up to three recommendations to compare tradeoffs.</p><div id="compare">No cars selected yet.</div></section>
+        <section class="panel"><h2>Decision notes</h2><p>Capture the buyer's reasoning before saving.</p><textarea id="notes" rows="8">Shortlist rationale: keep two practical choices and one aspirational option.</textarea><div class="message" id="message"></div></section>
+      </section>
+      <section class="panel"><h2>Saved shortlist sessions</h2><p>Persisted in this browser for the GitHub Pages demo.</p><div id="savedList" class="saved-list"></div></section>
+    </main>
+    <script>
+      const cars=[["baleno-zeta","Maruti Suzuki","Baleno","Zeta Petrol",8.4,22.3,3,"Hatchback","Petrol",5,9,6,7,6,9,["Excellent mileage","Easy city driving","Large service network"],["Average crash-test rating","Light highway feel"],"Owners like the smooth engine, low running costs, and hassle-free ownership."],["fronx-delta-plus","Maruti Suzuki","Fronx","Delta+ Turbo",9.7,20,4,"Compact SUV","Petrol",5,8,7,7,7,8,["Punchy turbo engine","SUV stance","Efficient for daily use"],["Rear seat is not the widest","Some premium features reserved for top trims"],"A good middle path for buyers wanting hatchback ease with crossover presence."],["nexon-creative","Tata","Nexon","Creative Petrol",12.2,17.4,5,"Compact SUV","Petrol",5,7,8,8,8,7,["Strong safety package","Feature-rich cabin","Confident highway manners"],["Mileage trails lighter cars","After-sales experience can vary by city"],"Frequently shortlisted by families that put crash safety and road presence first."],["punch-accomplished","Tata","Punch","Accomplished Petrol",8.9,20.1,5,"Micro SUV","Petrol",5,8,6,6,6,7,["Five-star safety","Compact footprint","High seating position"],["Engine feels relaxed rather than quick","Rear width is best for two adults"],"Buyers praise the confidence it gives first-time owners in crowded cities."],["venue-sx","Hyundai","Venue","SX Turbo",12.6,18.1,4,"Compact SUV","Petrol",5,8,7,9,8,8,["Polished interior","Loaded feature list","Easy automatic option"],["Rear seat space is average","Higher trims get expensive"],"A polished choice for city buyers who value features and cabin quality."],["city-vx","Honda","City","VX Petrol",14.1,17.8,5,"Sedan","Petrol",5,7,9,8,9,9,["Excellent rear-seat comfort","Refined engine","Strong reliability reputation"],["Low stance is not for rough roads","Price overlaps compact SUVs"],"Still a benchmark for families who travel often and prefer sedan comfort."],["seltos-htk-plus","Kia","Seltos","HTK+ Petrol",15.3,17,4,"SUV","Petrol",5,7,8,9,8,8,["Premium cabin feel","Strong feature package","Good road presence"],["Not the cheapest to buy","Ride can feel firm on broken roads"],"Often chosen by buyers who want a premium-feeling SUV without going too large."],["ertiga-zxi","Maruti Suzuki","Ertiga","ZXI Petrol",11.2,20.5,3,"MPV","Petrol",7,7,7,6,8,9,["Practical seven-seat layout","Efficient for its size","Low ownership cost"],["Safety rating is modest","Third row is best for short trips"],"A sensible family mover where space and running cost matter more than flash."],["carens-prestige","Kia","Carens","Prestige Petrol",13.4,16.8,3,"MPV","Petrol",7,6,8,8,9,8,["Comfortable three-row cabin","Premium dashboard","Good highway cruiser"],["Mileage is not a strength","Large footprint in tight parking"],"A nicer-feeling alternative to basic MPVs for larger families."],["i20-asta","Hyundai","i20","Asta Petrol",9.3,20.3,3,"Hatchback","Petrol",5,9,6,8,7,8,["Premium hatchback cabin","Feature-rich","Easy to drive daily"],["Rear seat is adequate, not huge","Safety score trails newer Tata options"],"A city-friendly premium hatchback for buyers who enjoy features and refinement."]].map(([id,make,model,variant,price_lakh,mileage_kmpl,safety_rating,body_type,fuel_type,seats,city_score,highway_score,features_score,comfort_score,reliability_score,pros,cons,review])=>({id,make,model,variant,price_lakh,mileage_kmpl,safety_rating,body_type,fuel_type,seats,city_score,highway_score,features_score,comfort_score,reliability_score,pros,cons,review}));
+      const $=(s)=>document.querySelector(s),selected=new Set();let ranked=[],prefs={};const esc=(v)=>String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");const money=(v)=>`Rs ${Number(v).toFixed(1)}L`;
+      function getPrefs(){return{budget_lakh:+$("#budget").value,family_size:+$("#familySize").value,usage:$("#usage").value,body_preference:$("#bodyPreference").value,mileage_priority:+$("#mileage").value,safety_priority:+$("#safety").value,feature_priority:+$("#features").value};}
+      function score(car,p){let s=28,r=[],c=[];if(car.price_lakh<=p.budget_lakh){s+=Math.min(16,7+(p.budget_lakh-car.price_lakh)*1.3);r.push("fits your budget with room for insurance and accessories");}else{let over=car.price_lakh-p.budget_lakh;s-=Math.min(30,8+over*7);c.push("is above your stated budget");}if(p.family_size>=6){if(car.seats>=7){s+=16;r.push("has the seating flexibility your family size needs");}else{s-=24;c.push("may feel cramped for six or more people");}}else if(p.family_size===5&&car.comfort_score>=8){s+=5;r.push("has stronger comfort for a full five-person family");}s+=(car.mileage_kmpl-15)*p.mileage_priority*.55;if(p.mileage_priority>=4&&car.mileage_kmpl>=20)r.push("keeps running costs low with strong mileage");s+=(car.safety_rating-3)*p.safety_priority*2.6;if(p.safety_priority>=4&&car.safety_rating>=5)r.push("matches your safety-first priority");if(p.safety_priority>=4&&car.safety_rating<=3)c.push("has a modest safety rating for your safety priority");s+=car.features_score*p.feature_priority*.72;if(p.feature_priority>=4&&car.features_score>=8)r.push("has the feature depth you asked for");if(p.usage==="city"){s+=car.city_score*1.45;if(car.city_score>=8)r.push("is easy to live with in city traffic");}else if(p.usage==="highway"){s+=car.highway_score*1.45;if(car.highway_score>=8)r.push("is better suited to highway trips");}else{s+=(car.city_score+car.highway_score)*.72;r.push("balances city use and weekend highway drives");}if(p.body_preference!=="any"){if(car.body_type.toLowerCase()===p.body_preference.toLowerCase()){s+=8;r.push("matches your preferred body style");}else{s-=6;}}s+=car.reliability_score;if(!r.length)r.push("is a reasonable all-rounder for the preferences entered");return{...car,match_score:Math.max(0,Math.min(100,Math.round(s))),reasons:r.slice(0,4),cautions:c.slice(0,3)};}
+      function sync(){$("#budgetValue").textContent=`${$("#budget").value} lakh`;$("#mileageValue").textContent=$("#mileage").value;$("#safetyValue").textContent=$("#safety").value;$("#featureValue").textContent=$("#features").value;}
+      function rank(e){if(e)e.preventDefault();prefs=getPrefs();ranked=cars.map((car)=>score(car,prefs)).sort((a,b)=>b.match_score-a.match_score);$("#summary").textContent=`${ranked[0].make} ${ranked[0].model} leads for a Rs ${prefs.budget_lakh}L budget.`;renderCards();renderCompare();}
+      function renderCards(){$("#recommendations").innerHTML=ranked.slice(0,6).map((car,i)=>`<article class="car ${selected.has(car.id)?"selected":""}"><div><div class="title"><h3>${i+1}. ${esc(car.make)} ${esc(car.model)}</h3><span class="tag">${esc(car.variant)}</span><span class="score">${car.match_score}% match</span></div><p>${esc(car.review)}</p><div class="metrics"><div class="metric"><strong>${money(car.price_lakh)}</strong><span>ex-showroom</span></div><div class="metric"><strong>${car.mileage_kmpl} kmpl</strong><span>mileage</span></div><div class="metric"><strong>${car.safety_rating}/5</strong><span>safety</span></div><div class="metric"><strong>${esc(car.body_type)}</strong><span>${car.seats} seats</span></div></div><strong>Why it fits</strong><ul>${car.reasons.map((x)=>`<li>${esc(x)}</li>`).join("")}</ul>${car.cautions.length?`<ul class="cautions">${car.cautions.map((x)=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}</div><div class="actions"><button type="button" data-id="${car.id}" class="${selected.has(car.id)?"active":""}">${selected.has(car.id)?"Selected":"Compare"}</button><span class="tag">${esc(car.fuel_type)}</span><span class="tag">${esc(car.pros[0])}</span></div></article>`).join("");document.querySelectorAll("[data-id]").forEach((b)=>b.addEventListener("click",()=>toggle(b.dataset.id)));}
+      function toggle(id){if(selected.has(id))selected.delete(id);else if(selected.size<3)selected.add(id);else{$("#message").textContent="Compare is capped at three cars.";return;}$("#message").textContent="";renderCards();renderCompare();}
+      function selectedCars(){return ranked.filter((car)=>selected.has(car.id));}
+      function renderCompare(){const list=selectedCars();if(!list.length){$("#compare").textContent="No cars selected yet.";return;}const rows=[["Price",(c)=>money(c.price_lakh)],["Mileage",(c)=>`${c.mileage_kmpl} kmpl`],["Safety",(c)=>`${c.safety_rating}/5`],["Best for",(c)=>c.reasons[0]],["Watch-out",(c)=>c.cautions[0]||c.cons[0]]];$("#compare").innerHTML=`<table><thead><tr><th>Decision factor</th>${list.map((c)=>`<th>${esc(c.make)} ${esc(c.model)}</th>`).join("")}</tr></thead><tbody>${rows.map(([label,get])=>`<tr><th>${label}</th>${list.map((c)=>`<td>${esc(get(c))}</td>`).join("")}</tr>`).join("")}</tbody></table>`;}
+      function loadSaved(){const items=JSON.parse(localStorage.getItem("cardekho-shortlists")||"[]");$("#savedCount").textContent=`${items.length} saved`;$("#savedList").innerHTML=items.length?items.map((it)=>`<article class="saved-item"><strong>${esc(it.buyer_name)}</strong><p><strong>Cars:</strong> ${esc(it.cars.join(", "))}</p><p>${esc(it.notes||"No notes captured.")}</p></article>`).join(""):"<p>No saved sessions yet.</p>";}
+      function save(){const list=selectedCars();if(!list.length){$("#message").textContent="Select at least one car before saving.";return;}const items=JSON.parse(localStorage.getItem("cardekho-shortlists")||"[]");items.unshift({buyer_name:$("#buyerName").value||"Anonymous buyer",cars:list.map((c)=>`${c.make} ${c.model}`),notes:$("#notes").value,created_at:Date.now()});localStorage.setItem("cardekho-shortlists",JSON.stringify(items.slice(0,20)));$("#message").textContent="Saved shortlist in this browser.";loadSaved();}
+      $("#prefsForm").addEventListener("submit",rank);$("#saveBtn").addEventListener("click",save);["budget","mileage","safety","features"].forEach((id)=>$("#"+id).addEventListener("input",sync));["budget","familySize","usage","bodyPreference","mileage","safety","features"].forEach((id)=>$("#"+id).addEventListener("change",rank));sync();rank();loadSaved();
+    </script>
+  </body>
+</html>

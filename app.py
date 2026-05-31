@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 DB_PATH = os.path.join(BASE_DIR, "shortlists.db")
-HOST = "127.0.0.1"
+HOST = os.environ.get("HOST", "127.0.0.1")
 PORT = int(os.environ.get("PORT", "8000"))
 
 

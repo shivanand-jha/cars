@@ -13,6 +13,8 @@ Open `http://127.0.0.1:8000`.
 
 No npm, pip, Docker, or external services are required. The app uses only Python stdlib, browser HTML/CSS/JS, and SQLite.
 
+For deployment notes, see `DEPLOYMENT.md`.
+
 ## Deliverable links
 
 - Screen recording: TODO

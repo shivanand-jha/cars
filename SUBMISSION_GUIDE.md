@@ -66,6 +66,8 @@ Replace the TODO values in `README.md`:
 
 If not deploying, leave the local run instructions as the runnable path.
 
+Optional deployment notes are in `DEPLOYMENT.md`.
+
 ## 6. Final submission contents
 
 Send:
